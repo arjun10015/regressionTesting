@@ -1,20 +1,18 @@
 trigger:
-  - main
+- main
 
 pool:
-  name: Default    # Use the name of your self-hosted agent pool
+  vmImage: 'windows-latest'
 
 steps:
-  - task: Maven@3
-    inputs:
-      mavenPomFile: 'pom.xml'
-      mavenOptions: '-Xmx3072m'
-      javaHomeOption: 'JDKVersion'
-      jdkVersionOption: '11'
-      jdkArchitectureOption: 'x64'
-      goals: 'clean test'
+- task: JavaToolInstaller@0
+  inputs:
+    versionSpec: '21'
+    jdkArchitectureOption: 'x64'
+    jdkSourceOption: 'PreInstalled'
+    cleanDestinationDirectory: false
 
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFiles: '**/surefire-reports/TEST-*.xml'
-      testRunTitle: 'JUnit Test Results'
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'clean test'
